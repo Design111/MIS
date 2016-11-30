@@ -210,7 +210,7 @@ CREATE TABLE `yg` (<br/>
 ##4.4.Axure原型设计
 原型设计是进行最终设计前需要完成的一项工作，它更好的描述系统在构造者和使用者心中的形态，也使之后的开发工作的变得更加简单与便捷，客户也可以根据原型设计对系统的最终实现提出意见与建议，构造者也可给及时发现前期开发时的不足之处。<br/>
 原型地址：https://github.com/cxins/work/blob/master/1.rp
-圆形截图：<br/>
+原型截图：<br/>
 ![原型设计1](https://github.com/cxins/work/blob/master/1.PNG)
 ![原型设计2](https://github.com/cxins/work/blob/master/2.PNG)
 ![原型设计3](https://github.com/cxins/work/blob/master/3.PNG)
