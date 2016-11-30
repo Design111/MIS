@@ -186,7 +186,7 @@ DROP TABLE IF EXISTS `qx`;<br/>
   `YGid` varchar(265) DEFAULT NULL,<br/>
   `QXMC` varchar(265) DEFAULT NULL,<br/>
   `ZWMC` varchar(265) DEFAULT NULL,<br/>
-  `ZWQX` varchar(265) DEFAULT NULL,<br/><br/>
+  `ZWQX` varchar(265) DEFAULT NULL,<br/>
   PRIMARY KEY (`QXDX`)<br/>
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限表';<br/>
 食材表：<br/>
