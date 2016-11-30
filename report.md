@@ -75,7 +75,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(8)配货系统：该模块主要供配货人员使用，配货人员收到库存盘点人员每日清算各食堂余量表和采购人员发送的采购量表，规划对各个食堂的分配量。<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(9)查询系统：因为涉及到产品项目众多，当需要获取该产品当前状况时，就需要有一个查询系统，以方便人员使用。<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)备份还原系统：该模块在每日报表生成后进行备份，当数据丢失时，进入该系统，使用还原报表功能，以保证数据完整性。<br/>
-<h3>3.3UML系统建模</h3>
+<h2>4.系统逻辑模型</h2>
+<h3>4.1UML系统建模</h3>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用例建模是UML建模的一部分，它也是UML里最基础的部分。用例建模的最主要功能就是使用用例的方法来表达系统的功能性需求或行为。用例模型主要包括两部分内容：用例图和用例规约，其中用例图用来确定系统中所包含的参与者、用例和两者之间的对应关系，描述的是关于系统功能的一个概述。用例规约描述的是用例的细节内容，每一个用例都应该有一个用例规约文档与之相对应。<br/>
 <h4>3.2.1用例建模</h4>
 1）	确定参与者<br/>
@@ -117,13 +118,96 @@
 ![用例描述1](https://github.com/09143793/MIS/blob/master/xq.jpg)
 ![用例描述2](https://github.com/09143793/MIS/blob/master/fx.jpg)
 ![用例描述3](https://github.com/09143793/MIS/blob/master/sj.jpg)
-##3.过程建模
-3.1业务流程分析
+###4.2过程建模
+####4.2.1业务流程分析
 通过对中国矿业大学食堂的业务流程调查，我们设计的食堂进销存管理信息系统业务流程如下：
 食堂采购员在负责采购食堂所需的蔬菜、瓜果、肉类、鸡蛋等之前根据食堂库存盘点人员前一晚盘点库存发来的采购需求进行采购；同时库存盘点人员根据每日库存食品的使用量将其输入食堂进销存管理信息系统；当每次食品采购完成后，食堂配送人员负责决定给我校三个食堂的供货量并进行及时运输采购的食品；最后后勤经理负责控制各个食品的调货批准以及后勤进行大额采购和高价采购时的批准和监督。
-3.2业务过程分析图
+####4.2.2业务过程分析图
 ![业务过程分析图]https://github.com/09143776/MIS/blob/master/课设13.PNG
-##2.Axure原型设计
+###4.3数据建模
+####4.3.1数据模型：
+![数据模型](/)
+####4.3.2MySQL语句：
+建数据库<br/>
+CREATE DATABASE  IF NOT EXISTS `canteen` <br/>
+USE `canteen`;<br/>
+供货表：<br/>
+DROP TABLE IF EXISTS `gh`;<br/>
+CREATE TABLE `gh` (<br/>
+  `STMC` varchar(265) NOT NULL,<br/>
+  `SCMC` varchar(265) DEFAULT NULL,<br/>
+  `YGid` int(11) DEFAULT NULL,<br/>
+  `PSSL` int(11) DEFAULT NULL,<br/>
+  `PSRQ` datetime DEFAULT NULL,<br/>
+  PRIMARY KEY (`STMC`),<br/>
+  KEY `ygid_idx` (`YGid`),<br/>
+  KEY `scmc2_idx` (`SCMC`),<br/>
+  CONSTRAINT `scmc2` FOREIGN KEY (`SCMC`) REFERENCES `sc` (`SCMC`)<br/> ON DELETE NO ACTION ON UPDATE NO ACTION,<br/>
+  CONSTRAINT `ygid` FOREIGN KEY (`YGid`) REFERENCES `yg` (`YGid`)<br/> ON DELETE NO ACTION ON UPDATE NO ACTION<br/>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='供货表';<br/>
+进货表：<br/>
+DROP TABLE IF EXISTS `jh`;<br/>
+CREATE TABLE `jh` (<br/>
+  `JHid` int(11) NOT NULL,<br/>
+  `SCMC` varchar(265) DEFAULT NULL,<br/>
+  `YGid` int(11) DEFAULT NULL,<br/>
+  `JHRQ` datetime DEFAULT NULL,<br/>
+  `JHSL` int(11) DEFAULT NULL,<br/>
+  `JHDJ` double DEFAULT NULL,<br/>
+  PRIMARY KEY (`JHid`),<br/>
+  KEY `ygid2_idx` (`YGid`),<br/>
+  KEY `scmc1_idx` (`SCMC`),<br/>
+  CONSTRAINT `scmc1` FOREIGN KEY (`SCMC`) REFERENCES `sc` (`SCMC`)<br/> ON DELETE NO ACTION ON UPDATE NO ACTION,<br/>
+  CONSTRAINT `ygid2` FOREIGN KEY (`YGid`) REFERENCES `yg` (`YGid`)<br/> ON DELETE NO ACTION ON UPDATE NO ACTION<br/>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='进货表';<br/>
+库存表：<br/>
+DROP TABLE IF EXISTS `kc`;<br/>
+CREATE TABLE `kc` (<br/>
+  `SCMC` varchar(265) NOT NULL,<br/>
+  `STMC` varchar(265) DEFAULT NULL,<br/>
+  `KCSL` int(11) DEFAULT NULL,<br/>
+  PRIMARY KEY (`SCMC`),<br/>
+  CONSTRAINT `scmc` FOREIGN KEY (`SCMC`) REFERENCES `sc` (`SCMC`)<br/> ON DELETE NO ACTION ON UPDATE NO ACTION<br/>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='库存表';<br/>
+留言表：<br/>
+DROP TABLE IF EXISTS `ly`;<br/>
+CREATE TABLE `ly` (<br/>
+  `YGid` int(11) DEFAULT NULL,<br/>
+  `LYNR` varchar(265) DEFAULT NULL,<br/>
+  `LYSJ` datetime DEFAULT NULL,<br/>
+  `SFCL` varchar(265) DEFAULT NULL,<br/>
+  KEY `ygid1_idx` (`YGid`),<br/>
+  CONSTRAINT `ygid1` FOREIGN KEY (`YGid`) REFERENCES `yg` (`YGid`)<br/> ON DELETE NO ACTION ON UPDATE NO ACTION<br/>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='留言表';<br/>
+权限表：<br/>
+DROP TABLE IF EXISTS `qx`;<br/>
+<br/>CREATE TABLE `qx` (<br/>
+  `QXDX` varchar(265) NOT NULL,<br/>
+  `YGid` varchar(265) DEFAULT NULL,<br/>
+  `QXMC` varchar(265) DEFAULT NULL,<br/>
+  `ZWMC` varchar(265) DEFAULT NULL,<br/>
+  `ZWQX` varchar(265) DEFAULT NULL,<br/><br/>
+  PRIMARY KEY (`QXDX`)<br/>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限表';<br/>
+食材表：<br/>
+DROP TABLE IF EXISTS `sc`;<br/>
+CREATE TABLE `sc` (<br/>
+  `SCMC` varchar(265) NOT NULL,<br/>
+  `AQKC` int(11) DEFAULT NULL,<br/>
+  `BZQ` int(11) DEFAULT NULL,<br/>
+  PRIMARY KEY (`SCMC`)<br/>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='食材表';<br/>
+员工表：<br/>
+DROP TABLE IF EXISTS `yg`;<br/>
+CREATE TABLE `yg` (<br/>
+  `YGid` int(11) NOT NULL,<br/>
+  `YGXM` varchar(265) DEFAULT NULL,<br/>
+  `ZWMC` varchar(265) DEFAULT NULL,<br/>
+  `Phone` varchar(265) DEFAULT NULL,<br/>
+  `Password` varchar(265) DEFAULT NULL,<br/>
+  PRIMARY KEY (`YGid`)<br/>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='员工表';<br/>
+##4.4.Axure原型设计
 原型设计是进行最终设计前需要完成的一项工作，它更好的描述系统在构造者和使用者心中的形态，也使之后的开发工作的变得更加简单与便捷，客户也可以根据原型设计对系统的最终实现提出意见与建议，构造者也可给及时发现前期开发时的不足之处。<br/>
 原型地址：https://github.com/cxins/work/blob/master/1.rp
 圆形截图：<br/>
